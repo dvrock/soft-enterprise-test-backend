@@ -10,7 +10,7 @@ app.use(bodyparser.json());
 // const mongoErrors = require("mongoose-mongodb-errors");
 // mongoose.Promise = global.Promise;
 // mongoose.plugin(mongoErrors);
-let url = 3000||3001||" "
+let url = 3000||3001||"https://rich-jade-angler-robe.cyclic.app"
 const route = require("./routes/route");
 app.use(express.json());
 app.use(cors())
