@@ -7,14 +7,13 @@ var upload = multer();
 const bodyparser = require("body-parser");
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
-// const mongoErrors = require("mongoose-mongodb-errors");
-// mongoose.Promise = global.Promise;
-// mongoose.plugin(mongoErrors);
-let url = 3000||3001||"https://rich-jade-angler-robe.cyclic.app"
+const mongoErrors = require("mongoose-mongodb-errors");
+mongoose.Promise = global.Promise;
+mongoose.plugin(mongoErrors);
+let url = 3000||3001||3002||3003;
 const route = require("./routes/route");
 app.use(express.json());
-app.use(cors())
-
+app.use(cors());
 app.use("/uploads", express.static("./uploads"));
 app.use("/", route);
 app.use("*", (req, res,next) => {
@@ -26,11 +25,9 @@ app.use("*", (req, res,next) => {
   }); 
   next(); 
 });
-
-
 mongoose
   .connect(
-   "mongodb+srv://Test:1234@cluster0.xaatijs.mongodb.net/?retryWrites=true&w=majority"
+  "mongodb://Test:1234@ac-b8dltl7-shard-00-00.izxpb8p.mongodb.net:27017,ac-b8dltl7-shard-00-01.izxpb8p.mongodb.net:27017,ac-b8dltl7-shard-00-02.izxpb8p.mongodb.net:27017/?ssl=true&replicaSet=atlas-asqsgf-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0"
   )
   .then(() => {
     console.log("db connection sucessfull");

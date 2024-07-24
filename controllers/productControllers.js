@@ -1,11 +1,11 @@
 const User = require("../models/Register");
-const Car = require("../models/Car");
+const Car = require("../models/Product");
 const bcrypt = require("bcrypt");
 const express = require("express");
-
 const app = express();
 const jwt = require("jsonwebtoken");
-
+const Product = require("../models/Product");
+const Joi= require("joi")
 module.exports = {
   Register: async (req, res) => {
     try {
@@ -70,28 +70,40 @@ module.exports = {
       res.json({ message: err.message });
     }
   },
-  AddCar: async (req, res) => {
+  AddProduct: async (req, res) => {
     
     try {
+
       console.log("fileName:", JSON.stringify(req.files));
       let files = [];
       req.files.forEach((item) => {
         files.push("../uploads/" + item.filename);
       });
       console.log(files);
-      const { model, price, phone, city, options } = JSON.parse(
+      const { name,price,quantity } = JSON.parse(
         req.body.values
       );
-      const newCar = await Car.create({
-        model,
-        price,
-        phone,
-        city,
-        options,
+      
+      const validationSchema = Joi.object({
+        name: Joi.string().required(),
+        price: Joi.number().required(),
+        quantity: Joi.number().required(),
+        
+      });
+      const { error } = validationSchema.validate(JSON.parse(
+        req.body.values
+      ));
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+      console.log("user===>", req.id)
+      const product = await Product.create({
+        user: req.id,
+        name,price,quantity,
         pictures: files,
       });
-      console.log("req body:", newCar);
-      res.json({ status: 200, data: newCar });
+      console.log("req body:", product );
+      res.json({ status: 200, data: product });
     } catch (err) {
       res.json({ message: err.message });
     }
